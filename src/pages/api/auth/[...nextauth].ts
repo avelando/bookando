@@ -15,17 +15,25 @@ export const authOptions: NextAuthOptions = {
       },
       authorize: async (credentials) => {
         if (!credentials) {
+          console.error("No credentials provided");
           return null;
         }
 
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
-        });
+        try {
+          const user = await prisma.user.findUnique({
+            where: { email: credentials.email },
+          });
 
-        if (user && bcrypt.compareSync(credentials.password, user.password)) {
-          return { id: user.id.toString(), name: user.name, email: user.email };
+          if (user && bcrypt.compareSync(credentials.password, user.password)) {
+            return { id: user.id.toString(), name: user.name, email: user.email };
+          } else {
+            console.error("Invalid credentials");
+            return null;
+          }
+        } catch (error) {
+          console.error("Error authorizing user", error);
+          return null;
         }
-        return null;
       },
     }),
   ],

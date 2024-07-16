@@ -10,20 +10,25 @@ const Login: React.FC = () => {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
+		try {
 		const result = await signIn("credentials", {
-		redirect: false,
-		email,
-		password,
-	});
+			redirect: false,
+			email,
+			password,
+		});
 
-    if (!result?.error) {
-      	router.push("/");
-    } else {
-      	alert("Login failed");
-    };
-	};	
+		if (!result?.error) {
+			router.push("/");
+		} else {
+			alert("Login failed");
+		}
+		} catch (error) {
+			console.error("An error occurred while logging in", error);
+			alert("An unexpected error occurred. Please try again.");
+		}
+	};
 
-  	return (
+	return (
 		<div className="container">
 			<div className="form-wrapper">
 				<h1>Login</h1>
@@ -50,13 +55,13 @@ const Login: React.FC = () => {
 				<p>
 					Não tem uma conta? 
 					<Link className="link" href="/autenticacao/signup">
-						Cadastra-se
+					Cadastra-se
 					</Link>
 				</p>
 				</form>
 			</div>
 		</div>
-  	);
+	);
 };
 
 export default Login;

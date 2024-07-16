@@ -6,59 +6,63 @@ import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 export const authOptions: NextAuthOptions = {
-  providers: [
-    CredentialsProvider({
-      name: "Credentials",
-      credentials: {
-        email: { label: "Email", type: "text" },
-        password: { label: "Password", type: "password" },
-      },
-      authorize: async (credentials) => {
-        if (!credentials) {
-          console.error("No credentials provided");
-          return null;
-        }
+	providers: [
+		CredentialsProvider({
+		name: "Credentials",
+		credentials: {
+			email: { label: "Email", type: "text" },
+			password: { label: "Password", type: "password" },
+		},
+		authorize: async (credentials) => {
+			if (!credentials) {
+				console.error("No credentials provided");
+				return null;
+			}
 
-        try {
-          const user = await prisma.user.findUnique({
-            where: { email: credentials.email },
-          });
+			try {
+				const user = await prisma.user.findUnique({
+					where: { email: credentials.email },
+			});
 
-          if (user && bcrypt.compareSync(credentials.password, user.password)) {
-            return { id: user.id.toString(), name: user.name, email: user.email };
-          } else {
-            console.error("Invalid credentials");
-            return null;
-          }
-        } catch (error) {
-          console.error("Error authorizing user", error);
-          return null;
-        }
-      },
-    }),
-  ],
-  session: {
-    strategy: "jwt",
-  },
-  callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-        token.name = user.name;
-        token.email = user.email;
-      }
-      return token;
+			if (user && bcrypt.compareSync(credentials.password, user.password)) {
+				return { id: user.id.toString(), name: user.name, email: user.email };
+			} else {
+				console.error("Invalid credentials");
+				return null;
+			}
+			} catch (error) {
+				console.error("Error authorizing user", error);
+				return null;
+			}
+		},
+		}),
+	],
+	session: {
+		strategy: "jwt",
+	},
+	callbacks: {
+		async jwt({ token, user }) {
+
+			if (user) {
+				token.id = user.id;
+				token.name = user.name;
+				token.email = user.email;
+			}
+
+			return token;
+		},
+		async session({ session, token }) {
+
+			if (token) {
+				session.user = { id: token.id as string, name: token.name as string, email: token.email as string };
+			}
+
+			return session;
+		},
+	},
+    pages: {
+        signIn: "/autenticacao/login",
     },
-    async session({ session, token }) {
-      if (token) {
-        session.user = { id: token.id as string, name: token.name as string, email: token.email as string };
-      }
-      return session;
-    },
-  },
-  pages: {
-    signIn: "/autenticacao/login",
-  },
 };
 
 export default NextAuth(authOptions);

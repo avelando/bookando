@@ -63,9 +63,10 @@ p {
 	text-align: center;
 }
 
-p a {
+p .link {
 	color: #192fbe;
 	font-weight: bold;
+	margin-left: 5px;
 }
   
 button {

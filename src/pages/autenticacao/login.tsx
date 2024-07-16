@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 const Login: React.FC = () => {
 	const [email, setEmail] = useState("");
@@ -46,7 +47,12 @@ const Login: React.FC = () => {
 					/>
 				</div>
 				<button type="submit">Login</button>
-				<p>Não tem uma conta? <a href="/autenticacao/signup">Cadastre-se</a></p>
+				<p>
+					Não tem uma conta? 
+					<Link className="link" href="/autenticacao/signup">
+						Cadastra-se
+					</Link>
+				</p>
 				</form>
 			</div>
 		</div>

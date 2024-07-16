@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const Signup: React.FC = () => {
     const [name, setName] = useState('');
@@ -63,7 +64,12 @@ const Signup: React.FC = () => {
                 </div>
                 <button type="submit">Signup</button>
                 </form>
-                <p>Já possui uma conta? <a href="/autenticacao/login">Login</a></p>
+                <p>
+					Já possui uma conta? 
+					<Link className="link" href="/autenticacao/login">
+						 Faça o login
+					</Link>
+				</p>
             </div>
         </div>
     );

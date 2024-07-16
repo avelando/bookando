@@ -1,0 +1,68 @@
+.header {
+    background-color: #333;
+    display: flex;
+    justify-content: space-between;
+    height: 60px;
+    align-items: center;
+}
+
+.navList {
+    display: flex;
+    list-style: none;
+}
+
+.navItem {
+    margin: 0 15px;
+}
+
+.navItem a {
+    color: white;
+    text-decoration: none;
+} 
+
+.logo, .person {
+    margin: 0 50px;
+    filter: invert(100%);
+}
+
+.profileMenu {
+    position: relative;
+    cursor: pointer;
+}
+  
+.dropdown {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+}
+  
+.profile, .logout {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+}
+  
+.profile a, .logout a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #333;
+    width: 100%;
+}
+  
+.profile a:hover, .logout a:hover {
+    background-color: #f0f0f0;
+}
+  
+.image {
+    display: flex;
+    align-items: start;
+}

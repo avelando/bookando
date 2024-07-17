@@ -1,20 +1,27 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import prisma from '../../lib/prisma';
+import { supabase } from '../../lib/supabaseClient';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'POST') {
-    const { followerId, followingId } = req.body;
+    if (req.method === 'POST') {
+        const { followerId, followingId } = req.body;
 
-    const follow = await prisma.follower.create({
-      data: {
-        followerId,
-        followingId,
-      },
-    });
+        try {
+			const { data, error } = await supabase
+				.from('followers')
+				.insert([{ follower_id: followerId, following_id: followingId }]);
 
-    res.status(201).json(follow);
-  } else {
-    res.setHeader('Allow', ['POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
-  }
+			if (error) {
+				console.error("Error creating follow", error);
+				return res.status(500).json({ error: 'Error creating follow' });
+			}
+
+			res.status(201).json(data);
+        } catch (error) {
+			console.error("Error processing request", error);
+			res.status(500).json({ error: 'Error processing request' });
+        }
+    } else {
+		res.setHeader('Allow', ['POST']);
+		res.status(405).end(`Method ${req.method} Not Allowed`);
+    }
 }

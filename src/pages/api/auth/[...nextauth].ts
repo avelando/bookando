@@ -75,11 +75,11 @@ export default NextAuth({
     signIn: "/autenticacao/login",
   },
   debug: true,
-  secret: process.env.JWT_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
 });
 
-console.log("JWT_SECRET:", process.env.JWT_SECRET);
+console.log("JWT_SECRET:", process.env.NEXTAUTH_SECRET);
 
-if (!process.env.JWT_SECRET) {
+if (!process.env.NEXTAUTH_SECRET) {
   throw new Error("JWT_SECRET is not defined");
 }

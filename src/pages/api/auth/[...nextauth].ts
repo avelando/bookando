@@ -17,27 +17,32 @@ export default NextAuth({
           return null;
         }
 
-        const { data: user, error } = await supabase
-          .from("users")
-          .select("*")
-          .eq("email", credentials.email)
-          .single();
+        try {
+          const { data: user, error } = await supabase
+            .from("users")
+            .select("*")
+            .eq("email", credentials.email)
+            .single();
 
-        if (error || !user) {
-          console.error("User not found or error fetching user", error);
+          if (error || !user) {
+            console.error("User not found or error fetching user", error);
+            return null;
+          }
+
+          const isValidPassword = bcrypt.compareSync(credentials.password, user.password);
+
+          if (!isValidPassword) {
+            console.error("Invalid credentials");
+            return null;
+          }
+
+          console.log("User authenticated:", user);
+
+          return { id: user.id, name: user.name, email: user.email };
+        } catch (error) {
+          console.error("Error in authorize function:", error);
           return null;
         }
-
-        const isValidPassword = bcrypt.compareSync(credentials.password, user.password);
-
-        if (!isValidPassword) {
-          console.error("Invalid credentials");
-          return null;
-        }
-
-        console.log("User authenticated:", user);
-
-        return { id: user.id, name: user.name, email: user.email };
       },
     }),
   ],
@@ -70,11 +75,11 @@ export default NextAuth({
     signIn: "/autenticacao/login",
   },
   debug: true,
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.JWT_SECRET,
 });
 
-console.log("NEXTAUTH_SECRET:", process.env.NEXTAUTH_SECRET);
+console.log("JWT_SECRET:", process.env.JWT_SECRET);
 
-if (!process.env.NEXTAUTH_SECRET) {
-  throw new Error("NEXTAUTH_SECRET is not defined");
+if (!process.env.JWT_SECRET) {
+  throw new Error("JWT_SECRET is not defined");
 }

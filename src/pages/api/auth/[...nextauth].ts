@@ -12,10 +12,11 @@ export default NextAuth({
 			password: { label: "Password", type: "password" },
 		},
 		authorize: async (credentials) => {
-			if (!credentials) {
-				throw new Error("Credentials are undefined");
+			if (!credentials || !credentials.email || !credentials.password) {
+				console.error("Credentials are not provided or incomplete");
+				return null;
 			}
-		
+
 			const { data: user, error } = await supabase
 			.from("users")
 			.select("*")
@@ -31,7 +32,7 @@ export default NextAuth({
 
 			if (!isValidPassword) {
 				console.error("Invalid credentials");
-			return null;
+				return null;
 			}
 
 			return { id: user.id, name: user.name, email: user.email };

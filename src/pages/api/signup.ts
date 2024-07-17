@@ -1,6 +1,5 @@
-// pages/api/signup.ts
 import { NextApiRequest, NextApiResponse } from 'next';
-import prisma from '../../lib/prisma';
+import { supabase } from '../../lib/supabaseClient';
 import bcrypt from 'bcryptjs';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -8,18 +7,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const { name, email, password } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        try {
-            const newUser = await prisma.user.create({
-                data: {
-                    name,
-                    email,
-                    password: hashedPassword,
-                },
-            });
-            res.status(201).json(newUser);
-        } catch (error) {
-            res.status(500).json({ error: 'User already exists' });
+        const { data, error } = await supabase
+        .from('users')
+        .insert([{ name, email, password: hashedPassword }]);
+
+        if (error) {
+            console.error("Error creating user", error);
+            return res.status(500).json({ error: 'User already exists or an error occurred' });
         }
+
+        res.status(201).json(data);
     } else {
         res.setHeader('Allow', ['POST']);
         res.status(405).end(`Method ${req.method} Not Allowed`);

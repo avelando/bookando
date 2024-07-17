@@ -1,11 +1,9 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
+import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { PrismaClient } from "@prisma/client";
+import { supabase } from "../../../lib/supabaseClient";
 import bcrypt from "bcryptjs";
 
-const prisma = new PrismaClient();
-
-export const authOptions: NextAuthOptions = {
+export default NextAuth({
 	providers: [
 		CredentialsProvider({
 		name: "Credentials",
@@ -15,25 +13,28 @@ export const authOptions: NextAuthOptions = {
 		},
 		authorize: async (credentials) => {
 			if (!credentials) {
-				console.error("No credentials provided");
+				throw new Error("Credentials are undefined");
+			}
+		
+			const { data: user, error } = await supabase
+			.from("users")
+			.select("*")
+			.eq("email", credentials.email)
+			.single();
+
+			if (error || !user) {
+				console.error("User not found or error fetching user", error);
 				return null;
 			}
 
-			try {
-				const user = await prisma.user.findUnique({
-					where: { email: credentials.email },
-			});
+			const isValidPassword = bcrypt.compareSync(credentials.password, user.password);
 
-			if (user && bcrypt.compareSync(credentials.password, user.password)) {
-				return { id: user.id.toString(), name: user.name, email: user.email };
-			} else {
+			if (!isValidPassword) {
 				console.error("Invalid credentials");
-				return null;
+			return null;
 			}
-			} catch (error) {
-				console.error("Error authorizing user", error);
-				return null;
-			}
+
+			return { id: user.id, name: user.name, email: user.email };
 		},
 		}),
 	],
@@ -42,27 +43,19 @@ export const authOptions: NextAuthOptions = {
 	},
 	callbacks: {
 		async jwt({ token, user }) {
-
-			if (user) {
-				token.id = user.id;
-				token.name = user.name;
-				token.email = user.email;
-			}
-
-			return token;
+		if (user) {
+			token.id = user.id;
+			token.name = user.name;
+			token.email = user.email;
+		}
+		return token;
 		},
 		async session({ session, token }) {
-
-			if (token) {
-				session.user = { id: token.id as string, name: token.name as string, email: token.email as string };
-			}
-
+			session.user = { id: token.id as string, name: token.name as string, email: token.email as string };
 			return session;
 		},
 	},
-    pages: {
-        signIn: "/autenticacao/login",
-    },
-};
-
-export default NextAuth(authOptions);
+	pages: {
+		signIn: "/autenticacao/login",
+	},
+});

@@ -13,13 +13,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         .insert([{ name, email, password: hashedPassword }]);
 
       if (error) {
-        console.error("Error creating user", error);
         return res.status(500).json({ error: 'User already exists or an error occurred' });
       }
 
       res.status(201).json(data);
     } catch (error) {
-      console.error("Unexpected error:", error);
       res.status(500).json({ error: 'An unexpected error occurred' });
     }
   } else {

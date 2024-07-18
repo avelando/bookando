@@ -1,0 +1,55 @@
+.card {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    margin: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    width: 200px; /* Definir uma largura fixa para os cards */
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.imageContainer {
+    width: 100px;
+    height: 150px; /* Definir uma altura fixa para as imagens */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+    overflow: hidden;
+    border: 1px solid #ddd; /* Adicionar uma borda às imagens */
+}
+
+.imageContainer img {
+    width: 100%; /* Manter a largura em 100% */
+    height: auto; /* Manter a proporção da altura */
+    object-fit: cover; /* Garantir que a imagem preencha o contêiner */
+}
+
+.textContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.card h3 {
+    font-size: 1em;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card p {
+    font-size: 0.9em;
+    color: #555;
+    margin: 5px 0 0 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

@@ -2,22 +2,22 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { supabase } from '../../lib/supabaseClient';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const { follower_id, following_id, action } = req.body;
+    const { user_id, book_id, status, action } = req.body;
 
     if (req.method === 'POST') {
-        if (action === 'follow') {
+        if (action === 'add') {
             const { error } = await supabase
-                .from('followers')
-                .insert([{ follower_id, following_id }]);
+                .from('reading_lists')
+                .insert([{ user_id, book_id, status }]);
             if (error) return res.status(500).json({ error: error.message });
-            return res.status(200).json({ message: 'User followed successfully' });
-        } else if (action === 'unfollow') {
+            return res.status(200).json({ message: 'Book added to reading list' });
+        } else if (action === 'remove') {
             const { error } = await supabase
-                .from('followers')
+                .from('reading_lists')
                 .delete()
-                .match({ follower_id, following_id });
+                .match({ user_id, book_id });
             if (error) return res.status(500).json({ error: error.message });
-            return res.status(200).json({ message: 'User unfollowed successfully' });
+            return res.status(200).json({ message: 'Book removed from reading list' });
         }
     }
     res.setHeader('Allow', ['POST']);

@@ -47,7 +47,7 @@ const Header: React.FC = () => {
                         <div className={styles.profile}>
                             <Link href="/profile">
                                 {/* <Image className={styles.image} src="/images/logout.png" alt="Person" width={20} height={20} /> */}
-                                Perfil
+                                Profile
                             </Link>
                         </div>
             

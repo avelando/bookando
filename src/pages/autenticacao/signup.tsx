@@ -72,7 +72,7 @@ const Signup: React.FC = () => {
                 </form>
                 <p>
                     Já possui uma conta? 
-                    <Link href="/autenticacao/login">
+                    <Link className="link" href="/autenticacao/login">
                         Login
                     </Link>
                 </p>

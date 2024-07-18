@@ -83,3 +83,115 @@ button:hover {
 	background-color: #292e32;
 }
   
+/* Books */
+
+/* global.css */
+
+.book-genre-container {
+    flex: 1;
+    margin: 10px;
+}
+
+.book-list {
+    display: flex;
+    overflow-x: auto;
+    padding: 10px;
+}
+
+.load-more-button {
+    margin: 10px;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.search-results-container {
+    flex: 1;
+    margin: 10px;
+}
+
+.search-results-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 10px;
+}
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
+
+.search-input {
+    padding: 10px;
+    font-size: 16px;
+    flex: 1;
+}
+
+.search-button {
+    padding: 10px;
+    font-size: 16px;
+    margin-left: 10px;
+}
+
+/* BookCard Styles */
+
+.card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    margin: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    min-width: 250px;
+    max-width: 400px;
+    background-color: #fff;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.image-container {
+    width: 120px;
+    height: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 20px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.text-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.card h3 {
+    font-size: 1.1em;
+    margin: 0 0 10px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card p {
+    font-size: 0.9em;
+    color: #555;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

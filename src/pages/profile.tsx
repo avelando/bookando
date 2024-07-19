@@ -1,51 +1,42 @@
 import React, { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
 import Header from '../components/Header';
 
 const Profile: React.FC = () => {
-    const [data, setData] = useState<{ message: string } | null>(null);
-    const [followers, setFollowers] = useState<number>(0);
-    const [following, setFollowing] = useState<number>(0);
+    const { data: session } = useSession();
+    const [profileData, setProfileData] = useState<any>(null);
     const [readingLists, setReadingLists] = useState({
-        Lidos: 0,
-        Lendo: 0,
-        'Para ler': 0
+        read: 0,
+        reading: 0,
+        'to-read': 0,
     });
 
     useEffect(() => {
-        fetch('/api/profile')
-            .then(response => response.json())
-            .then(data => setData(data));
-        
-        // Fetch followers count
-        fetch('/api/followers-count')
-            .then(response => response.json())
-            .then(data => {
-                setFollowers(data.followers);
-                setFollowing(data.following);
-            });
+        if (session) {
+            fetch('/api/profile')
+                .then(response => response.json())
+                .then(data => setProfileData(data));
 
-        // Fetch reading lists count
-        fetch('/api/reading-list-count')
-            .then(response => response.json())
-            .then(data => {
-                setReadingLists(data);
-            });
-    }, []);
+            fetch(`/api/reading-list-count?user_id=${session.user.id}`)
+                .then(response => response.json())
+                .then(data => setReadingLists(data));
+        }
+    }, [session]);
 
     return (
         <div>
             <Header />
             <h1>Profile</h1>
-            {data && <p>{data.message}</p>}
+            {profileData && <p>{profileData.message}</p>}
             <div>
-                <h2>Followers: {followers}</h2>
-                <h2>Following: {following}</h2>
+                <h2>Followers: {profileData?.followers}</h2>
+                <h2>Following: {profileData?.following}</h2>
             </div>
             <div>
                 <h2>Reading Lists</h2>
-                <p>Lidos: {readingLists.Lidos}</p>
-                <p>Lendo: {readingLists.Lendo}</p>
-                <p>Para ler: {readingLists['Para ler']}</p>
+                <p>Lidos: {readingLists.read}</p>
+                <p>Lendo: {readingLists.reading}</p>
+                <p>Para ler: {readingLists['to-read']}</p>
             </div>
         </div>
     );

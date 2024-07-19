@@ -71,7 +71,7 @@ const Signup: React.FC = () => {
                 <button type="submit">Signup</button>
                 </form>
                 <p>
-                    Já possui uma conta? 
+                    Already have an account? 
                     <Link className="link" href="/autenticacao/login">
                         Login
                     </Link>

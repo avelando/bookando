@@ -53,9 +53,9 @@ const Login: React.FC = () => {
 				</div>
 				<button type="submit">Login</button>
 				<p>
-					Não tem uma conta? 
+					Don't have an account?
 					<Link className="link" href="/autenticacao/signup">
-						Cadastra-se
+						Signup
 					</Link>
 				</p>
 				</form>

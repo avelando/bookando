@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import BookCard from '../components/Books';
 import BookDetailsModal from '../components/BooksDetailsModal';
+import { useSession } from 'next-auth/react';
 import { Book } from '../lib/gender';
 
-interface Books extends Book {
+interface BooksProps extends Book {
     key: string;
 }
 
 const Books: React.FC = () => {
+    const { data: session } = useSession();
     const [fictionBooks, setFictionBooks] = useState<Book[]>([]);
     const [romanceBooks, setRomanceBooks] = useState<Book[]>([]);
     const [suspenseBooks, setSuspenseBooks] = useState<Book[]>([]);
@@ -78,45 +80,39 @@ const Books: React.FC = () => {
         setIsModalOpen(true);
     };
 
-    const handleModalClose = () => {
-        setIsModalOpen(false);
-        setSelectedBook(null);
-    };
-
-    const handleSave = (status: string) => {
-        if (selectedBook) {
-            fetch('/api/reading-list', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    user_id: 'current_user_id', // Replace with actual user ID
-                    book_id: selectedBook.key,
-                    status,
-                    action: 'add'
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Book added to reading list:', data);
-                // Update the reading list count in the profile
-                fetch('/api/profile') // Assuming /api/profile updates the counts
-                    .then(response => response.json())
-                    .then(profileData => {
-                        setReadingLists(profileData.readingLists); // Update the reading lists state
-                    });
-            })
-            .catch(error => {
-                console.error('Error adding book to reading list:', error);
-            });
-        }
-    };
+    const handleSaveBook = async (status: string) => {
+			if (!session || !session.user || !selectedBook) return;
+	
+			try {
+					const response = await fetch('/api/reading-list', {
+							method: 'POST',
+							headers: {
+									'Content-Type': 'application/json',
+							},
+							body: JSON.stringify({
+									user_id: session.user.id,
+									book_id: selectedBook.key,
+									title: selectedBook.title,
+									author: selectedBook.authors.map((author) => author.name).join(', '),
+									status,
+							}),
+					});
+	
+					if (!response.ok) {
+							const errorData = await response.json();
+							throw new Error(errorData.error || 'Failed to save the book');
+					}
+	
+					console.log('Book saved successfully');
+			} catch (error) {
+					console.error('Error saving book:', error);
+			}
+	};	
 
     const renderBooks = (books: Book[], genre: string, loadMore: () => void) => (
-        <div className="book-genre-container">
+        <div style={{ flex: 1, margin: '10px' }}>
             <h2>{genre}</h2>
-            <div className="book-list">
+            <div style={{ display: 'flex', overflowX: 'auto', padding: '10px' }}>
                 {books.map(book => (
                     <BookCard 
                         key={book.key} 
@@ -138,9 +134,9 @@ const Books: React.FC = () => {
     );
 
     const renderSearchResults = () => (
-        <div className="search-results-container">
+        <div style={{ flex: 1, margin: '10px' }}>
             <h2>Search Results</h2>
-            <div className="search-results-list">
+            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', padding: '10px' }}>
                 {searchResults.map(book => (
                     <BookCard 
                         key={book.key} 
@@ -157,8 +153,7 @@ const Books: React.FC = () => {
     return (
         <div>
             <Header />
-            <h1>Books</h1>
-            <div className="search-container">
+            <div style={{ display: 'flex', justifyContent: 'center', margin: '20px' }}>
                 <input 
                     type="text" 
                     placeholder="Search by title, author, or genre" 
@@ -185,11 +180,11 @@ const Books: React.FC = () => {
                 )}
             </div>
             {selectedBook && (
-                <BookDetailsModal 
-                    isOpen={isModalOpen} 
-                    onClose={handleModalClose} 
-                    book={selectedBook} 
-                    onSave={handleSave} 
+                <BookDetailsModal
+                    isOpen={isModalOpen}
+                    book={selectedBook}
+                    onClose={() => setIsModalOpen(false)}
+                    onSave={handleSaveBook}
                 />
             )}
         </div>
@@ -197,7 +192,3 @@ const Books: React.FC = () => {
 };
 
 export default Books;
-function setReadingLists(readingLists: any) {
-    throw new Error('Function not implemented.');
-}
-

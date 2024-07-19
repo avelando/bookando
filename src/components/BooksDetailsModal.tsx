@@ -1,42 +1,42 @@
 import React from 'react';
 import styles from '../styles/BookDetailsModal.module.css';
+import Modal from 'react-modal';
+import { BookDetailsModalProps } from '../lib/gender';
 
-interface BookDetailsModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    book: any;
-    onSave: (status: string) => void;
-}
+const BookDetailsModal: React.FC<BookDetailsModalProps> = ({ isOpen, book, onClose, onSave }) => {
+	const [status, setStatus] = React.useState<string>('');
+    
+	Modal.setAppElement('#__next');
+	
+  const handleSave = () => {
+    onSave(status);
+    onClose();
+  };
 
-const BookDetailsModal: React.FC<BookDetailsModalProps> = ({ isOpen, onClose, book, onSave }) => {
-    const [status, setStatus] = React.useState<string>('Lido');
-
-    if (!isOpen) return null;
-
-    const handleSave = () => {
-        onSave(status);
-        onClose();
-    };
-
-    return (
-        <div className={styles.modalOverlay}>
-            <div className={styles.modalContent}>
-                <h2>{book.title}</h2>
-                <p>{book.authors?.join(', ')}</p>
-                <img src={`https://covers.openlibrary.org/b/id/${book.cover_id}-L.jpg`} alt={book.title} />
-                <div className={styles.selectContainer}>
-                    <label htmlFor="status">Add to list:</label>
-                    <select id="status" value={status} onChange={(e) => setStatus(e.target.value)}>
-                        <option value="Lido">Lido</option>
-                        <option value="Lendo">Lendo</option>
-                        <option value="Para ler">Para ler</option>
-                    </select>
-                </div>
-                <button onClick={handleSave} className={styles.saveButton}>Save</button>
-                <button onClick={onClose} className={styles.closeButton}>Close</button>
-            </div>
+  return (
+    <Modal isOpen={isOpen} onRequestClose={onClose} contentLabel="Book Details" className={styles.modal} overlayClassName={styles.overlay}>
+      <div className={styles.modalContent}>
+        <div className={styles.imageContainer}>
+          {book.cover_id ? (
+            <img src={`https://covers.openlibrary.org/b/id/${book.cover_id}-L.jpg`} alt={book.title} className={styles.bookImage} />
+          ) : (
+            <div className={styles.noImage}>No Image</div>
+          )}
         </div>
-    );
+        <div className={styles.detailsContainer}>
+          <h2 className={styles.bookTitle}>{book.title}</h2>
+          <p className={styles.bookAuthors}><strong>Author(s):</strong> {book.authors.map(author => author.name).join(', ')}</p>
+          <select value={status} onChange={(e) => setStatus(e.target.value)} className={styles.statusSelect}>
+            <option value="">Select status</option>
+            <option value="read">Read</option>
+            <option value="reading">Reading</option>
+            <option value="to-read">To Read</option>
+          </select>
+          <button onClick={handleSave} className={styles.saveButton}>Save</button>
+        </div>
+      </div>
+    </Modal>
+  );
 };
 
 export default BookDetailsModal;

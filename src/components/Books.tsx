@@ -1,8 +1,21 @@
 import React from 'react';
 import styles from '../styles/Books.module.css';
-import { Book } from '../lib/gender';
+import { BookCardProps } from '../lib/gender';
 
-const BookCard: React.FC<Book> = ({ title, cover_id, authors, onClick }) => {
+const BookCard: React.FC<BookCardProps> = ({ title, cover_id, authors, onClick }) => {
+    const renderAuthors = () => {
+        if (!authors) {
+            return 'Unknown Author';
+        }
+        if (Array.isArray(authors) && typeof authors[0] === 'string') {
+            return authors.join(', ');
+        }
+        if (Array.isArray(authors) && typeof authors[0] === 'object') {
+            return authors.map(author => author.name).join(', ');
+        }
+        return 'Unknown Author';
+    };
+
     return (
         <div className={styles.card} onClick={onClick}>
             <div className={styles.imageContainer}>
@@ -14,7 +27,7 @@ const BookCard: React.FC<Book> = ({ title, cover_id, authors, onClick }) => {
             </div>
             <div className={styles.textContainer}>
                 <h3>{title}</h3>
-                <p>{authors.map(author => author.name).join(', ')}</p>
+                <p>{renderAuthors()}</p>
             </div>
         </div>
     );

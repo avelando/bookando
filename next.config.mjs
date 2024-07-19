@@ -9,6 +9,9 @@ const nextConfig = {
             },
         ];
     },
+    images: {
+        domains: ['covers.openlibrary.org'],
+    },
 };
 
 export default nextConfig;

@@ -5,10 +5,6 @@ import BookDetailsModal from "../components/BooksDetailsModal";
 import { useSession } from "next-auth/react";
 import { Book } from "../lib/gender";
 
-interface BooksProps extends Book {
-    key: string;
-}
-
 const Books: React.FC = () => {
     const { data: session } = useSession();
     const [fictionBooks, setFictionBooks] = useState<Book[]>([]);

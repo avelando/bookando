@@ -2,6 +2,7 @@ import React from "react";
 import styles from "../styles/BookDetailsModal.module.css";
 import Modal from "react-modal";
 import { BookDetailsModalProps } from "../lib/gender";
+import Image from "next/image";
 
 const BookDetailsModal: React.FC<BookDetailsModalProps> = ({ isOpen, book, onClose, onSave }) => {
     const [status, setStatus] = React.useState<string>("");
@@ -18,7 +19,7 @@ const BookDetailsModal: React.FC<BookDetailsModalProps> = ({ isOpen, book, onClo
             <div className={styles.modalContent}>
                 <div className={styles.imageContainer}>
                     {book.cover_id ? (
-                        <img src={`https://covers.openlibrary.org/b/id/${book.cover_id}-L.jpg`} alt={book.title} className={styles.bookImage} />
+                        <Image src={`https://covers.openlibrary.org/b/id/${book.cover_id}-L.jpg`} alt={book.title} width={100} height={150} className={styles.bookImage} />
                     ) : (
                         <div className={styles.noImage}>No Image</div>
                     )}

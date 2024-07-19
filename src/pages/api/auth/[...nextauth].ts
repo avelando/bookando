@@ -3,10 +3,6 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { supabase } from '../../../lib/supabaseClient';
 import bcrypt from 'bcryptjs';
 
-if (!process.env.NEXTAUTH_SECRET || !process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-  throw new Error('Missing required environment variables');
-}
-
 export default NextAuth({
   providers: [
     CredentialsProvider({
@@ -81,5 +77,3 @@ export default NextAuth({
   debug: true,
   secret: process.env.NEXTAUTH_SECRET,
 });
-
-console.log('JWT_SECRET:', process.env.NEXTAUTH_SECRET);

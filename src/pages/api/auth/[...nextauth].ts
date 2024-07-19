@@ -1,57 +1,61 @@
-import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import { supabase } from "../../../lib/supabaseClient";
-import bcrypt from "bcryptjs";
+import NextAuth from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import { supabase } from '../../../lib/supabaseClient';
+import bcrypt from 'bcryptjs';
+
+if (!process.env.NEXTAUTH_SECRET || !process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+  throw new Error('Missing required environment variables');
+}
 
 export default NextAuth({
   providers: [
     CredentialsProvider({
-      name: "Credentials",
+      name: 'Credentials',
       credentials: {
-        email: { label: "Email", type: "text" },
-        password: { label: "Password", type: "password" },
+        email: { label: 'Email', type: 'text' },
+        password: { label: 'Password', type: 'password' },
       },
       authorize: async (credentials) => {
         if (!credentials || !credentials.email || !credentials.password) {
-          console.error("Credentials are not provided or incomplete", credentials);
+          console.error('Credentials are not provided or incomplete', credentials);
           return null;
         }
 
         try {
           const { data: user, error } = await supabase
-            .from("users")
-            .select("*")
-            .eq("email", credentials.email)
+            .from('users')
+            .select('*')
+            .eq('email', credentials.email)
             .single();
 
           if (error || !user) {
-            console.error("User not found or error fetching user", error);
+            console.error('User not found or error fetching user', error);
             return null;
           }
 
           const isValidPassword = bcrypt.compareSync(credentials.password, user.password);
 
           if (!isValidPassword) {
-            console.error("Invalid credentials");
+            console.error('Invalid credentials');
             return null;
           }
 
-          console.log("User authenticated:", user);
+          console.log('User authenticated:', user);
 
           return { id: user.id, name: user.name, email: user.email };
         } catch (error) {
-          console.error("Error in authorize function:", error);
+          console.error('Error in authorize function:', error);
           return null;
         }
       },
     }),
   ],
   session: {
-    strategy: "jwt",
+    strategy: 'jwt',
   },
   callbacks: {
     async jwt({ token, user }) {
-      console.log("JWT callback:", token, user);
+      console.log('JWT callback:', token, user);
 
       if (user) {
         token.id = user.id;
@@ -61,7 +65,7 @@ export default NextAuth({
       return token;
     },
     async session({ session, token }) {
-      console.log("Session callback:", session, token);
+      console.log('Session callback:', session, token);
 
       session.user = {
         id: token.id as string,
@@ -72,14 +76,10 @@ export default NextAuth({
     },
   },
   pages: {
-    signIn: "/autenticacao/login",
+    signIn: '/autenticacao/login',
   },
   debug: true,
   secret: process.env.NEXTAUTH_SECRET,
 });
 
-console.log("JWT_SECRET:", process.env.NEXTAUTH_SECRET);
-
-if (!process.env.NEXTAUTH_SECRET) {
-  throw new Error("JWT_SECRET is not defined");
-}
+console.log('JWT_SECRET:', process.env.NEXTAUTH_SECRET);

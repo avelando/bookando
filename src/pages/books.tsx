@@ -81,38 +81,38 @@ const Books: React.FC = () => {
     };
 
     const handleSaveBook = async (status: string) => {
-			if (!session || !session.user || !selectedBook) return;
-	
-			try {
-					const response = await fetch('/api/reading-list', {
-							method: 'POST',
-							headers: {
-									'Content-Type': 'application/json',
-							},
-							body: JSON.stringify({
-									user_id: session.user.id,
-									book_id: selectedBook.key,
-									title: selectedBook.title,
-									author: selectedBook.authors.map((author) => author.name).join(', '),
-									status,
-							}),
-					});
-	
-					if (!response.ok) {
-							const errorData = await response.json();
-							throw new Error(errorData.error || 'Failed to save the book');
-					}
-	
-					console.log('Book saved successfully');
-			} catch (error) {
-					console.error('Error saving book:', error);
-			}
-	};	
+        if (!session || !session.user || !selectedBook) return;
+
+        try {
+            const response = await fetch('/api/reading-list', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user_id: session.user.id,
+                    book_id: selectedBook.key,
+                    title: selectedBook.title,
+                    author: selectedBook.authors.map((author) => author.name).join(', '),
+                    status,
+                }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to save the book');
+            }
+
+            console.log('Book saved successfully');
+        } catch (error) {
+            console.error('Error saving book:', error);
+        }
+    };
 
     const renderBooks = (books: Book[], genre: string, loadMore: () => void) => (
-        <div style={{ flex: 1, margin: '10px' }}>
+        <div className="genre-section">
             <h2>{genre}</h2>
-            <div style={{ display: 'flex', overflowX: 'auto', padding: '10px' }}>
+            <div className="book-list">
                 {books.map(book => (
                     <BookCard 
                         key={book.key} 
@@ -134,9 +134,9 @@ const Books: React.FC = () => {
     );
 
     const renderSearchResults = () => (
-        <div style={{ flex: 1, margin: '10px' }}>
+        <div className="search-results">
             <h2>Search Results</h2>
-            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', padding: '10px' }}>
+            <div className="search-book-list">
                 {searchResults.map(book => (
                     <BookCard 
                         key={book.key} 
@@ -153,7 +153,7 @@ const Books: React.FC = () => {
     return (
         <div>
             <Header />
-            <div style={{ display: 'flex', justifyContent: 'center', margin: '20px' }}>
+            <div className="search-bar">
                 <input 
                     type="text" 
                     placeholder="Search by title, author, or genre" 

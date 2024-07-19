@@ -6,9 +6,9 @@ import Image from "next/image";
 
 const BookDetailsModal: React.FC<BookDetailsModalProps> = ({ isOpen, book, onClose, onSave }) => {
     const [status, setStatus] = React.useState<string>("");
-    
+
     Modal.setAppElement("#__next");
-    
+
     const handleSave = () => {
         onSave(status);
         onClose();
@@ -19,7 +19,13 @@ const BookDetailsModal: React.FC<BookDetailsModalProps> = ({ isOpen, book, onClo
             <div className={styles.modalContent}>
                 <div className={styles.imageContainer}>
                     {book.cover_id ? (
-                        <Image src={`https://covers.openlibrary.org/b/id/${book.cover_id}-L.jpg`} alt={book.title} width={100} height={150} className={styles.bookImage} />
+                        <Image 
+                            src={`https://covers.openlibrary.org/b/id/${book.cover_id}-L.jpg`} 
+                            alt={book.title} 
+                            width={100} 
+                            height={150} 
+                            className={styles.bookImage} 
+                        />
                     ) : (
                         <div className={styles.noImage}>No Image</div>
                     )}

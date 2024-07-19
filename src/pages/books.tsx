@@ -24,10 +24,7 @@ const Books: React.FC = () => {
         fetch(`/api/books?genre=${genre}&offset=${offset}`)
             .then(response => response.json())
             .then(data => {
-                setBooks(prevBooks => {
-                    const newBooks = data.books.filter((newBook: Book) => !prevBooks.some(book => book.key === newBook.key));
-                    return [...prevBooks, ...newBooks];
-                });
+                setBooks(prevBooks => [...prevBooks, ...data.books]);
                 setOffset(prevOffset => prevOffset + 10);
                 setIsLoading(false);
             })

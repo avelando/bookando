@@ -1,13 +1,17 @@
-import React from "react";
-import styles from "../styles/BookDetailsModal.module.css";
+import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
-import { BookDetailsModalProps } from "../lib/gender";
 import Image from "next/image";
+import { BookDetailsModalProps } from "../lib/gender";
+import styles from "../styles/BookDetailsModal.module.css";
 
 const BookDetailsModal: React.FC<BookDetailsModalProps> = ({ isOpen, book, onClose, onSave }) => {
-    const [status, setStatus] = React.useState<string>("");
+    const [status, setStatus] = useState<string>("");
 
-    Modal.setAppElement("#__next");
+    useEffect(() => {
+        if (book && isOpen) {
+            setStatus("");
+        }
+    }, [book, isOpen]);
 
     const handleSave = () => {
         onSave(status);
@@ -18,28 +22,22 @@ const BookDetailsModal: React.FC<BookDetailsModalProps> = ({ isOpen, book, onClo
         <Modal isOpen={isOpen} onRequestClose={onClose} contentLabel="Book Details" className={styles.modal} overlayClassName={styles.overlay}>
             <div className={styles.modalContent}>
                 <div className={styles.imageContainer}>
-                    {book.cover_id ? (
-                        <Image 
-                            src={`https://covers.openlibrary.org/b/id/${book.cover_id}-L.jpg`} 
-                            alt={book.title} 
-                            width={100} 
-                            height={150} 
-                            className={styles.bookImage} 
-                        />
+                    {book?.cover_id ? (
+                        <Image src={`https://covers.openlibrary.org/b/id/${book.cover_id}-L.jpg`} alt={book.title} width={200} height={300} className={styles.bookImage} />
                     ) : (
                         <div className={styles.noImage}>No Image</div>
                     )}
                 </div>
                 <div className={styles.detailsContainer}>
-                    <h2 className={styles.bookTitle}>{book.title}</h2>
-                    <p className={styles.bookAuthors}><strong>Author(s):</strong> {book.authors.map(author => author.name).join(", ")}</p>
+                    <h2 className={styles.bookTitle}>{book?.title}</h2>
+                    <p className={styles.bookAuthors}><strong>Author(s):</strong> {book?.authors?.map(author => author.name).join(", ") || "Unknown"}</p>
                     <select value={status} onChange={(e) => setStatus(e.target.value)} className={styles.statusSelect}>
-                        <option value="">&lsquo;Select status&lsquo;</option>
-                        <option value="read">&rsquo;Read&lsquo;</option>
-                        <option value="reading">&rsquo;Reading&lsquo;</option>
-                        <option value="to-read">&rsquo;To Read&lsquo;</option>
+                        <option value="">Select status</option>
+                        <option value="read">Read</option>
+                        <option value="reading">Reading</option>
+                        <option value="to-read">To Read</option>
                     </select>
-                    <button onClick={handleSave} className={styles.saveButton}>&rsquo;Save&lsquo;</button>
+                    <button onClick={handleSave} className={styles.saveButton}>Save</button>
                 </div>
             </div>
         </Modal>

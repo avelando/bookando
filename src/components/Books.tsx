@@ -1,19 +1,19 @@
-import React from 'react';
-import styles from '../styles/Books.module.css';
-import { BookCardProps } from '../lib/gender';
+import React from "react";
+import styles from "../styles/Books.module.css";
+import { BookCardProps } from "../lib/gender";
 
 const BookCard: React.FC<BookCardProps> = ({ title, cover_id, authors, onClick }) => {
     const renderAuthors = () => {
         if (!authors) {
-            return 'Unknown Author';
+            return "Unknown Author";
         }
-        if (Array.isArray(authors) && typeof authors[0] === 'string') {
-            return authors.join(', ');
+        if (Array.isArray(authors) && typeof authors[0] === "string") {
+            return authors.join(", ");
         }
-        if (Array.isArray(authors) && typeof authors[0] === 'object') {
-            return authors.map(author => author.name).join(', ');
+        if (Array.isArray(authors) && typeof authors[0] === "object") {
+            return authors.map(author => author.name).join(", ");
         }
-        return 'Unknown Author';
+        return "Unknown Author";
     };
 
     return (

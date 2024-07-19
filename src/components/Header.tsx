@@ -21,15 +21,15 @@ const Header: React.FC = () => {
 
             <nav>
                 <ul className={styles.navList}>
-                <li className={styles.navItem}>
-                    <Link href="/">Home</Link>
-                </li>
-                <li className={styles.navItem}>
-                    <Link href="/books">Books</Link>
-                </li>
-                <li className={styles.navItem}>
-                    <Link href="/about">About</Link>
-                </li>
+                    <li className={styles.navItem}>
+                        <Link href="/">Home</Link>
+                    </li>
+                    <li className={styles.navItem}>
+                        <Link href="/books">Books</Link>
+                    </li>
+                    <li className={styles.navItem}>
+                        <Link href="/about">About</Link>
+                    </li>
                 </ul>
             </nav>
 
@@ -50,10 +50,9 @@ const Header: React.FC = () => {
                                 Profile
                             </Link>
                         </div>
-            
                         <div className={styles.logout}>
                             <a onClick={handleLogout}>
-                                <Image className={styles.image} src='/images/logout.png' alt="Logout" width={20} height={20} />
+                                <Image className={styles.image} src="/images/logout.png" alt="Logout" width={20} height={20} />
                                 Logout
                             </a>
                         </div>

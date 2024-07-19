@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
-import Header from '../components/Header';
+import React, { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import Header from "../components/Header";
 
 const Home: React.FC = () => {
 	const { data: session, status } = useSession();
 	const [data, setData] = useState<{ message: string } | null>(null);
 
 	useEffect(() => {
-		fetch('/api/home')
+		fetch("/api/home")
 		.then(response => response.json())
 		.then(data => setData(data));
 	}, []);
 
-	if (status === 'loading') {
+	if (status === "loading") {
 		return <p>Loading...</p>;
 	}
 

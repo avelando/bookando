@@ -11,18 +11,18 @@ const Signup: React.FC = () => {
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-        const response = await fetch('/api/signup', {
-            method: 'POST',
+        const response = await fetch("/api/signup", {
+            method: "POST",
             headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             },
             body: JSON.stringify({ name, email, password }),
         });
 
         if (response.ok) {
-            router.push('/autenticacao/login');
+            router.push("/autenticacao/login");
         } else {
-            alert('User already exists or an error occurred.');
+            alert("User already exists or an error occurred.");
         }
         } catch (error) {
         console.error("An error occurred while signing up", error);

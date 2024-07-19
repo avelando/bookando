@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from "next";
 
 const fetchBooks = async (url: string) => {
     const response = await fetch(url);
@@ -21,6 +21,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(200).json({ books });
     } catch (error) {
         console.error("Error fetching books from Open Library:", error);
-        res.status(500).json({ message: 'Internal Server Error' });
+        res.status(500).json({ message: "Internal Server Error" });
     }
 }

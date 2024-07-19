@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import Header from '../components/Header';
-import BookCard from '../components/Books';
-import BookDetailsModal from '../components/BooksDetailsModal';
-import { useSession } from 'next-auth/react';
-import { Book } from '../lib/gender';
+import React, { useEffect, useState } from "react";
+import Header from "../components/Header";
+import BookCard from "../components/Books";
+import BookDetailsModal from "../components/BooksDetailsModal";
+import { useSession } from "next-auth/react";
+import { Book } from "../lib/gender";
 
 interface BooksProps extends Book {
     key: string;
@@ -14,7 +14,7 @@ const Books: React.FC = () => {
     const [fictionBooks, setFictionBooks] = useState<Book[]>([]);
     const [romanceBooks, setRomanceBooks] = useState<Book[]>([]);
     const [suspenseBooks, setSuspenseBooks] = useState<Book[]>([]);
-    const [searchQuery, setSearchQuery] = useState<string>('');
+    const [searchQuery, setSearchQuery] = useState<string>("");
     const [searchResults, setSearchResults] = useState<Book[]>([]);
     const [fictionOffset, setFictionOffset] = useState<number>(0);
     const [romanceOffset, setRomanceOffset] = useState<number>(0);
@@ -39,9 +39,9 @@ const Books: React.FC = () => {
     };
 
     useEffect(() => {
-        fetchBooks('fiction', fictionOffset, setFictionBooks, setFictionOffset);
-        fetchBooks('romance', romanceOffset, setRomanceBooks, setRomanceOffset);
-        fetchBooks('suspense', suspenseOffset, setSuspenseBooks, setSuspenseOffset);
+        fetchBooks("fiction", fictionOffset, setFictionBooks, setFictionOffset);
+        fetchBooks("romance", romanceOffset, setRomanceBooks, setRomanceOffset);
+        fetchBooks("suspense", suspenseOffset, setSuspenseBooks, setSuspenseOffset);
     }, []);
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,7 +49,7 @@ const Books: React.FC = () => {
     };
 
     const handleSearchClick = () => {
-        if (searchQuery.trim() === '') {
+        if (searchQuery.trim() === "") {
             setSearchResults([]);
             return;
         }
@@ -84,28 +84,28 @@ const Books: React.FC = () => {
         if (!session || !session.user || !selectedBook) return;
 
         try {
-            const response = await fetch('/api/reading-list', {
-                method: 'POST',
+            const response = await fetch("/api/reading-list", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
                     user_id: session.user.id,
                     book_id: selectedBook.key,
                     title: selectedBook.title,
-                    author: selectedBook.authors.map((author) => author.name).join(', '),
+                    author: selectedBook.authors.map((author) => author.name).join(", "),
                     status,
                 }),
             });
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to save the book');
+                throw new Error(errorData.error || "Failed to save the book");
             }
 
-            console.log('Book saved successfully');
+            console.log("Book saved successfully");
         } catch (error) {
-            console.error('Error saving book:', error);
+            console.error("Error saving book:", error);
         }
     };
 
@@ -128,7 +128,7 @@ const Books: React.FC = () => {
                 className="load-more-button"
                 disabled={isLoading}
             >
-                {isLoading ? 'Loading...' : 'Load More'}
+                {isLoading ? "Loading..." : "Load More"}
             </button>
         </div>
     );
@@ -173,9 +173,9 @@ const Books: React.FC = () => {
                     renderSearchResults()
                 ) : (
                     <>
-                        {renderBooks(fictionBooks, 'Fiction', () => fetchBooks('fiction', fictionOffset, setFictionBooks, setFictionOffset))}
-                        {renderBooks(romanceBooks, 'Romance', () => fetchBooks('romance', romanceOffset, setRomanceBooks, setRomanceOffset))}
-                        {renderBooks(suspenseBooks, 'Suspense', () => fetchBooks('suspense', suspenseOffset, setSuspenseBooks, setSuspenseOffset))}
+                        {renderBooks(fictionBooks, "Fiction", () => fetchBooks("fiction", fictionOffset, setFictionBooks, setFictionOffset))}
+                        {renderBooks(romanceBooks, "Romance", () => fetchBooks("romance", romanceOffset, setRomanceBooks, setRomanceOffset))}
+                        {renderBooks(suspenseBooks, "Suspense", () => fetchBooks("suspense", suspenseOffset, setSuspenseBooks, setSuspenseOffset))}
                     </>
                 )}
             </div>

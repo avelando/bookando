@@ -1,12 +1,12 @@
-import React from 'react';
-import styles from '../styles/BookDetailsModal.module.css';
-import Modal from 'react-modal';
-import { BookDetailsModalProps } from '../lib/gender';
+import React from "react";
+import styles from "../styles/BookDetailsModal.module.css";
+import Modal from "react-modal";
+import { BookDetailsModalProps } from "../lib/gender";
 
 const BookDetailsModal: React.FC<BookDetailsModalProps> = ({ isOpen, book, onClose, onSave }) => {
-    const [status, setStatus] = React.useState<string>('');
+    const [status, setStatus] = React.useState<string>("");
     
-    Modal.setAppElement('#__next');
+    Modal.setAppElement("#__next");
     
     const handleSave = () => {
         onSave(status);
@@ -25,7 +25,7 @@ const BookDetailsModal: React.FC<BookDetailsModalProps> = ({ isOpen, book, onClo
                 </div>
                 <div className={styles.detailsContainer}>
                     <h2 className={styles.bookTitle}>{book.title}</h2>
-                    <p className={styles.bookAuthors}><strong>Author(s):</strong> {book.authors.map(author => author.name).join(', ')}</p>
+                    <p className={styles.bookAuthors}><strong>Author(s):</strong> {book.authors.map(author => author.name).join(", ")}</p>
                     <select value={status} onChange={(e) => setStatus(e.target.value)} className={styles.statusSelect}>
                         <option value="">&lsquo;Select status&lsquo;</option>
                         <option value="read">&rsquo;Read&lsquo;</option>

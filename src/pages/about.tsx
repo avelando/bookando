@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import Header from '../components/Header';
+import React, { useEffect, useState } from "react";
+import Header from "../components/Header";
 
 const About: React.FC = () => {
     const [data, setData] = useState<{ message: string } | null>(null);
 
     useEffect(() => {
-        fetch('/api/about')
+        fetch("/api/about")
             .then(response => response.json())
             .then(data => setData(data));
     }, []);

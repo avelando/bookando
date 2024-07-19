@@ -1,41 +1,23 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/react";
-import { supabase } from "../../lib/supabaseClient";
+import { NextApiRequest, NextApiResponse } from 'next';
+import { supabase } from '../../lib/supabaseClient';
+import { getSession } from 'next-auth/react';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const session = await getSession({ req });
 
     if (!session) {
-        return res.status(401).json({ message: "Unauthorized" });
+        return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    const userId = session.user.id;
-
-    const { data: userData, error: userError } = await supabase
-        .from("users")
-        .select("*")
-        .eq("id", userId)
+    const { data, error } = await supabase
+        .from('users')
+        .select('id, name, email')
+        .eq('email', session.user.email)
         .single();
 
-    const { data: followersData, error: followersError } = await supabase
-        .from("followers")
-        .select("*", { count: "exact" })
-        .eq("following_id", userId);
-
-    const { data: followingData, error: followingError } = await supabase
-        .from("followers")
-        .select("*", { count: "exact" })
-        .eq("follower_id", userId);
-
-    if (userError || followersError || followingError) {
-        return res.status(500).json({ message: "Error fetching profile data" });
+    if (error) {
+        return res.status(500).json({ error: 'Error fetching profile' });
     }
 
-    const profileData = {
-        user: userData,
-        followers: followersData.length,
-        following: followingData.length,
-    };
-
-    res.status(200).json(profileData);
+    res.status(200).json(data);
 }

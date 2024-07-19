@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
-import Header from "../components/Header";
+import React, { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
+import Header from '../components/Header';
 
 const Profile: React.FC = () => {
     const { data: session } = useSession();
@@ -8,18 +8,20 @@ const Profile: React.FC = () => {
     const [readingLists, setReadingLists] = useState({
         read: 0,
         reading: 0,
-        "to-read": 0,
+        'to-read': 0,
     });
 
     useEffect(() => {
         if (session) {
-            fetch("/api/profile")
+            fetch('/api/profile')
                 .then(response => response.json())
-                .then(data => setProfileData(data));
+                .then(data => setProfileData(data))
+                .catch(error => console.error('Error fetching profile:', error));
 
             fetch(`/api/reading-list-count?user_id=${session.user.id}`)
                 .then(response => response.json())
-                .then(data => setReadingLists(data));
+                .then(data => setReadingLists(data))
+                .catch(error => console.error('Error fetching reading list count:', error));
         }
     }, [session]);
 
@@ -27,16 +29,16 @@ const Profile: React.FC = () => {
         <div>
             <Header />
             <h1>Profile</h1>
-            {profileData && <p>{profileData.message}</p>}
+            {profileData && <p>{profileData.name}</p>}
             <div>
                 <h2>Followers: {profileData?.followers}</h2>
                 <h2>Following: {profileData?.following}</h2>
             </div>
             <div>
                 <h2>Reading Lists</h2>
-                <p>Lidos: {readingLists.read}</p>
-                <p>Lendo: {readingLists.reading}</p>
-                <p>Para ler: {readingLists["to-read"]}</p>
+                <p>Read: {readingLists.read}</p>
+                <p>Reading: {readingLists.reading}</p>
+                <p>To Read: {readingLists['to-read']}</p>
             </div>
         </div>
     );

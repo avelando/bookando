@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import BookCard from "../components/Books";
 import BookDetailsModal from "../components/BooksDetailsModal";
@@ -19,12 +19,15 @@ const Books: React.FC = () => {
     const [selectedBook, setSelectedBook] = useState<Book | null>(null);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-    const fetchBooks = useCallback((genre: string, offset: number, setBooks: React.Dispatch<React.SetStateAction<Book[]>>, setOffset: React.Dispatch<React.SetStateAction<number>>) => {
+    const fetchBooks = (genre: string, offset: number, setBooks: React.Dispatch<React.SetStateAction<Book[]>>, setOffset: React.Dispatch<React.SetStateAction<number>>) => {
         setIsLoading(true);
         fetch(`/api/books?genre=${genre}&offset=${offset}`)
             .then(response => response.json())
             .then(data => {
-                setBooks(prevBooks => [...prevBooks, ...data.books]);
+                setBooks(prevBooks => {
+                    const newBooks = data.books.filter((newBook: Book) => !prevBooks.some(book => book.key === newBook.key));
+                    return [...prevBooks, ...newBooks];
+                });
                 setOffset(prevOffset => prevOffset + 10);
                 setIsLoading(false);
             })
@@ -32,13 +35,13 @@ const Books: React.FC = () => {
                 console.error("Error fetching books:", error);
                 setIsLoading(false);
             });
-    }, []);
+    };
 
     useEffect(() => {
         fetchBooks("fiction", fictionOffset, setFictionBooks, setFictionOffset);
         fetchBooks("romance", romanceOffset, setRomanceBooks, setRomanceOffset);
         fetchBooks("suspense", suspenseOffset, setSuspenseBooks, setSuspenseOffset);
-    }, [fetchBooks, fictionOffset, romanceOffset, suspenseOffset]);
+    }, []);
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchQuery(event.target.value);

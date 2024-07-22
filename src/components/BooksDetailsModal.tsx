@@ -8,6 +8,9 @@ const BookDetailsModal: React.FC<BookDetailsModalProps> = ({ isOpen, book, onClo
     const [status, setStatus] = React.useState<string>("");
     
     Modal.setAppElement("#__next");
+
+    const imageUrl = book.cover_id ? `https://covers.openlibrary.org/b/id/${book.cover_id}-L.jpg` : null;
+    console.log(`BookDetailsModal image URL for ${book.title}:`, imageUrl);
     
     const handleSave = () => {
         onSave(status);
@@ -18,8 +21,8 @@ const BookDetailsModal: React.FC<BookDetailsModalProps> = ({ isOpen, book, onClo
         <Modal isOpen={isOpen} onRequestClose={onClose} contentLabel="Book Details" className={styles.modal} overlayClassName={styles.overlay}>
             <div className={styles.modalContent}>
                 <div className={styles.imageContainer}>
-                    {book.cover_id ? (
-                        <Image src={`https://covers.openlibrary.org/b/id/${book.cover_id}-L.jpg`} alt={book.title} width={128} height={192} priority />
+                    {imageUrl ? (
+                        <Image src={imageUrl} alt={book.title} width={128} height={192} priority />
                     ) : (
                         <div className={styles.noImage}>No Image</div>
                     )}

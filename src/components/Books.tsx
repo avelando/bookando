@@ -17,11 +17,14 @@ const BookCard: React.FC<BookCardProps> = ({ title, cover_id, authors, onClick }
         return "Unknown Author";
     };
 
+    const imageUrl = cover_id ? `https://covers.openlibrary.org/b/id/${cover_id}-L.jpg` : null;
+    console.log(`BookCard image URL for ${title}:`, imageUrl);
+
     return (
         <div className={styles.card} onClick={onClick}>
             <div className={styles.imageContainer}>
-                {cover_id ? (
-                    <Image src={`https://covers.openlibrary.org/b/id/${cover_id}-L.jpg`} alt={title} width={128} height={192} priority />
+                {imageUrl ? (
+                    <Image src={imageUrl} alt={title} width={128} height={192} priority />
                 ) : (
                     <div className={styles.noImage}>No Image</div>
                 )}

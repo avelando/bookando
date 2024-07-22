@@ -1,7 +1,6 @@
 import React from "react";
 import styles from "../styles/Books.module.css";
 import { BookCardProps } from "../lib/gender";
-import Image from "next/image";
 
 const BookCard: React.FC<BookCardProps> = ({ title, cover_id, authors, onClick }) => {
     const renderAuthors = () => {
@@ -24,7 +23,7 @@ const BookCard: React.FC<BookCardProps> = ({ title, cover_id, authors, onClick }
         <div className={styles.card} onClick={onClick}>
             <div className={styles.imageContainer}>
                 {imageUrl ? (
-                    <Image src={imageUrl} alt={title} width={128} height={192} priority />
+                    <img src={imageUrl} alt={title} className={styles.bookImage} />
                 ) : (
                     <div className={styles.noImage}>No Image</div>
                 )}

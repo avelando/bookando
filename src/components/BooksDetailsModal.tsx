@@ -2,7 +2,6 @@ import React from "react";
 import styles from "../styles/BookDetailsModal.module.css";
 import Modal from "react-modal";
 import { BookDetailsModalProps } from "../lib/gender";
-import Image from "next/image";
 
 const BookDetailsModal: React.FC<BookDetailsModalProps> = ({ isOpen, book, onClose, onSave }) => {
     const [status, setStatus] = React.useState<string>("");
@@ -11,7 +10,7 @@ const BookDetailsModal: React.FC<BookDetailsModalProps> = ({ isOpen, book, onClo
 
     const imageUrl = book.cover_id ? `https://covers.openlibrary.org/b/id/${book.cover_id}-L.jpg` : null;
     console.log(`BookDetailsModal image URL for ${book.title}:`, imageUrl);
-    
+
     const handleSave = () => {
         onSave(status);
         onClose();
@@ -22,7 +21,7 @@ const BookDetailsModal: React.FC<BookDetailsModalProps> = ({ isOpen, book, onClo
             <div className={styles.modalContent}>
                 <div className={styles.imageContainer}>
                     {imageUrl ? (
-                        <Image src={imageUrl} alt={book.title} width={128} height={192} priority />
+                        <img src={imageUrl} alt={book.title} className={styles.bookImage} />
                     ) : (
                         <div className={styles.noImage}>No Image</div>
                     )}

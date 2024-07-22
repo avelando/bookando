@@ -60,11 +60,6 @@ const Books: React.FC = () => {
                     } else {
                         book.cover_id = null;
                     }
-                    if (book.author_name) {
-                        book.authors = book.author_name.map((name: string) => ({ name }));
-                    } else {
-                        book.authors = [{ name: "Unknown Author" }];
-                    }
                     return book;
                 });
                 setSearchResults(booksWithCovers);
@@ -94,7 +89,7 @@ const Books: React.FC = () => {
                     user_id: session.user.id,
                     book_id: selectedBook.key,
                     title: selectedBook.title,
-                    author: selectedBook.authors ? selectedBook.authors.map((author) => author.name).join(", ") : "Unknown Author",
+                    author: selectedBook.authors.map((author) => author.name).join(", "),
                     status,
                 }),
             });

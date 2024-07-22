@@ -21,7 +21,7 @@ const BookCard: React.FC<BookCardProps> = ({ title, cover_id, authors, onClick }
         <div className={styles.card} onClick={onClick}>
             <div className={styles.imageContainer}>
                 {cover_id ? (
-                    <Image src={`https://covers.openlibrary.org/b/id/${cover_id}-L.jpg`} alt={title} width={100} height={150} />
+                    <Image src={`https://covers.openlibrary.org/b/id/${cover_id}-L.jpg`} alt={title} width={128} height={192} priority />
                 ) : (
                     <div className={styles.noImage}>No Image</div>
                 )}

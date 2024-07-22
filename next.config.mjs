@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    images: {
+        domains: ['covers.openlibrary.org'],
+    },
     async redirects() {
         return [
             {
@@ -8,9 +11,6 @@ const nextConfig = {
                 permanent: false,
             },
         ];
-    },
-    images: {
-        domains: ['covers.openlibrary.org'],
     },
 };
 
